@@ -72,7 +72,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
 
             for video in traverse_obj(response, ('itemList', lambda _, v: v['id'])):
                 video_id = video['id']
-                print("videoid" + video_id)
+                #print("videoid" + video_id)
                 if not self._configuration_arg('web_fallback', ie_key=TikTokIE):
                     yield self.url_result(self._create_url(user_name, video_id), TikTokIE, video_id)
                     continue
@@ -102,7 +102,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
             'rehydration data', user_name, end_pattern=r'</script>', default={}),
             ('__DEFAULT_SCOPE__', 'webapp.user-detail', 'userInfo', 'user', 'secUid', {str}))
 
-        print("exiting secuid")
+        #print("exiting secuid")
 
         if sec_uid:
             return sec_uid
@@ -151,7 +151,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'Try using  --extractor-arg "tiktok:sec_uid=ID"  with your command, '
                     'replacing "ID" with the channel_id of the requested user')
 
-        print("exiting extract")
+        #print("exiting extract")
         return self.playlist_result(self._entries(sec_uid, user_name), user_name)
 
 
