@@ -76,9 +76,8 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                 video_id = video['id']
                 print(video_id)
                 print("entry")          
-                yield {
-                    video_id
-                }
+                yield video_id
+                
 
             old_cursor = cursor
             print("traversing")
