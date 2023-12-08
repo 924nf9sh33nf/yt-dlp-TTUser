@@ -76,7 +76,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                 video_id = video['id']
                 print(video_id)
                 entry = {
-                    "id" = video_id
+                    "id": video_id
                 }
                 print("entry")          
                 yield {
