@@ -73,9 +73,6 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
             for video in traverse_obj(response, ('itemList', lambda _, v: v['id'])):
                 video_id = video['id']
 
-                if not self._configuration_arg('web_fallback', ie_key=TikTokIE):
-                    yield self.url_result(self._create_url(user_name, video_id), TikTokIE, video_id)
-                    continue
 
                 entry = {}
                 try:
