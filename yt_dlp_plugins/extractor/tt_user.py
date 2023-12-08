@@ -89,7 +89,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'formats': ["formats"],
                     'subtitles': "",
                     'thumbnails': "",
-                    'duration': "",
+                    'duration': 10,
                     'availability': "",
                     '_format_sort_fields': ('quality', 'codec', 'size', 'br'),
                 }
