@@ -101,6 +101,9 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
             r'<script[^>]+\bid="__UNIVERSAL_DATA_FOR_REHYDRATION__"[^>]*>', webpage,
             'rehydration data', user_name, end_pattern=r'</script>', default={}),
             ('__DEFAULT_SCOPE__', 'webapp.user-detail', 'userInfo', 'user', 'secUid', {str}))
+
+        print("exiting secuid")
+
         if sec_uid:
             return sec_uid
         try:
@@ -148,6 +151,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'Try using  --extractor-arg "tiktok:sec_uid=ID"  with your command, '
                     'replacing "ID" with the channel_id of the requested user')
 
+        print("exiting extract")
         return self.playlist_result(self._entries(sec_uid, user_name), user_name)
 
 
