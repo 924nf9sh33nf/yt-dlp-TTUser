@@ -74,17 +74,24 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
 
             for video in traverse_obj(response, ('itemList', lambda _, v: v['id'])):
                 video_id = video['id']
-                print(video_id)
-                entry = {
-                    "id": video_id
-                }
-                print("entry")          
-                yield {
-                    **entry,
-                    'extractor_key': TikTokIE.ie_key(),
-                    'extractor': 'TikTok',
-                    'webpage_url': self._create_url(user_name, video_id),
-                }
+
+                entry = {}
+                try:
+                    entry = self._extract_aweme_app(video_id)
+                except ExtractorError as e:
+                    self.report_warning(
+                        f'{e.orig_msg}. Failed to extract from feed; falling back to web API response')
+                    if traverse_obj(video, ('video', 'playAddr')):
+                        entry = self._parse_aweme_video_web(video, self._create_url(user_name, video_id), video_id)
+                if entry:
+                    yield {
+                        **entry,
+                        'extractor_key': TikTokIE.ie_key(),
+                        'extractor': 'TikTok',
+                        'webpage_url': self._create_url(user_name, video_id),
+                    }
+                else:
+                    self.report_warning(f'Unable to extract video {video_id}')
                 
 
             old_cursor = cursor
