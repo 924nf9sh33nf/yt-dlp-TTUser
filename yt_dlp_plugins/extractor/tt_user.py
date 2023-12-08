@@ -78,7 +78,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                 if not self._configuration_arg('web_fallback', ie_key=TikTokIE):
                     yield self.url_result(self._create_url(user_name, video_id), TikTokIE, video_id)
                     continue
-
+                print("entry")            
                 entry = { video_id }
                 yield {
                     **entry,
@@ -88,6 +88,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                 }
 
             old_cursor = cursor
+            print("traversing")
             cursor = traverse_obj(
                 response, ('itemList', -1, 'createTime', {lambda x: x * 1E3}, {int_or_none}))
             if not cursor:
@@ -154,7 +155,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'replacing "ID" with the channel_id of the requested user')
 
         entries = self._entries(sec_uid, user_name)
-        print("playlist")
+        print("playlist!")
         result = self.playlist_result(entries, user_name)
         print("exiting extract") 
         return result
