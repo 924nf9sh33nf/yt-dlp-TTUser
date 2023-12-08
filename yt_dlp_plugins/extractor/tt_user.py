@@ -150,7 +150,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'Could not extract secondary user ID. '
                     'Try using  --extractor-arg "tiktok:sec_uid=ID"  with your command, '
                     'replacing "ID" with the channel_id of the requested user')
-
+        self._entries(sec_uid, user_name)
         #print("exiting extract")
         return None
 
