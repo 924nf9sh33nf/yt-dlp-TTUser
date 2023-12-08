@@ -152,7 +152,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'replacing "ID" with the channel_id of the requested user')
 
         print("exiting extract")
-        return self.playlist_result(self._entries(sec_uid, user_name), user_name)
+        return self._entries(sec_uid, user_name)
 
 
 __all__ = []
