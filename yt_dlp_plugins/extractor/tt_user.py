@@ -152,7 +152,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'replacing "ID" with the channel_id of the requested user')
 
         #print("exiting extract")
-        return self._entries(sec_uid, user_name)
+        return None
 
 
 __all__ = []
