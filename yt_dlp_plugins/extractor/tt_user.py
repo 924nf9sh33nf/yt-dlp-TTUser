@@ -64,7 +64,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
         }
 
     def _entries(self, sec_uid, user_name):
-        print("entering entries")
+        #print("entering entries")
         cursor = int(time.time() * 1E3)
         for page in itertools.count(1):
             print("cursor")
@@ -75,7 +75,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
             for video in traverse_obj(response, ('itemList', lambda _, v: v['id'])):
                 video_id = video['id']
 
-                print(video_id)
+                #print(video_id)
         
                 yield {
                     'id': video_id,
@@ -95,7 +95,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                 }
 
             old_cursor = cursor
-            print("traversing")
+            #print("traversing")
             cursor = traverse_obj(
                 response, ('itemList', -1, 'createTime', {lambda x: x * 1E3}, {int_or_none}))
             if not cursor:
@@ -162,9 +162,9 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'replacing "ID" with the channel_id of the requested user')
 
         entries = self._entries(sec_uid, user_name)
-        print("playlist!")
+        #print("playlist!")
         result = self.playlist_result(entries, user_name)
-        print("exiting extract") 
+        #print("exiting extract") 
         return result
 
 
