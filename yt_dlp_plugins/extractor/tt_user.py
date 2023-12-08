@@ -75,8 +75,16 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
             for video in traverse_obj(response, ('itemList', lambda _, v: v['id'])):
                 video_id = video['id']
                 print(video_id)
+                entry = {
+                    "id" = video_id
+                }
                 print("entry")          
-                yield video_id
+                yield {
+                    **entry,
+                    'extractor_key': TikTokIE.ie_key(),
+                    'extractor': 'TikTok',
+                    'webpage_url': self._create_url(user_name, video_id),
+                }
                 
 
             old_cursor = cursor
