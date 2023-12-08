@@ -76,9 +76,91 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                 video_id = video['id']
 
                 print(video_id)
-                entry = {}
-                try:
-                    entry = self._extract_aweme_app(video_id)
+                feed_list = self._call_api(
+                    'feed', {'aweme_id': aweme_id}, aweme_id, note='Downloading video feed',
+                    errnote='Unable to download video feed').get('aweme_list') or []
+                aweme_detail = next((aweme for aweme in feed_list if str(aweme.get('aweme_id')) == aweme_id), None)
+                aweme_id = aweme_detail['aweme_id']
+                video_info = aweme_detail['video']
+        
+                known_resolutions = {}
+        
+                # Hack: Add direct video links first to prioritize them when removing duplicate formats
+                formats = []
+            
+        
+                self._remove_duplicate_formats(formats)
+                auth_cookie = self._get_cookies(self._WEBPAGE_HOST).get('sid_tt')
+                if auth_cookie:
+                    for f in formats:
+                        self._set_cookie(compat_urllib_parse_urlparse(f['url']).hostname, 'sid_tt', auth_cookie.value)
+        
+                thumbnails = []
+                for cover_id in ('cover', 'ai_dynamic_cover', 'animated_cover', 'ai_dynamic_cover_bak',
+                                 'origin_cover', 'dynamic_cover'):
+                    for cover_url in traverse_obj(video_info, (cover_id, 'url_list', ...)):
+                        thumbnails.append({
+                            'id': cover_id,
+                            'url': cover_url,
+                        })
+        
+                stats_info = aweme_detail.get('statistics') or {}
+                author_info = aweme_detail.get('author') or {}
+                music_info = aweme_detail.get('music') or {}
+                user_url = self._UPLOADER_URL_FORMAT % (traverse_obj(author_info,
+                                                                     'sec_uid', 'id', 'uid', 'unique_id',
+                                                                     expected_type=str_or_none, get_all=False))
+                labels = traverse_obj(aweme_detail, ('hybrid_label', ..., 'text'), expected_type=str)
+        
+                contained_music_track = traverse_obj(
+                    music_info, ('matched_song', 'title'), ('matched_pgc_sound', 'title'), expected_type=str)
+                contained_music_author = traverse_obj(
+                    music_info, ('matched_song', 'author'), ('matched_pgc_sound', 'author'), 'author', expected_type=str)
+        
+                is_generic_og_trackname = music_info.get('is_original_sound') and music_info.get('title') == 'original sound - %s' % music_info.get('owner_handle')
+                if is_generic_og_trackname:
+                    music_track, music_author = contained_music_track or 'original sound', contained_music_author
+                else:
+                    music_track, music_author = music_info.get('title'), music_info.get('author')
+        
+                yield {
+                    'id': aweme_id,
+                    'extractor_key': TikTokIE.ie_key(),
+                    'extractor': TikTokIE.IE_NAME,
+                    'webpage_url': self._create_url(author_info.get('uid'), aweme_id),
+                    **traverse_obj(aweme_detail, {
+                        'title': ('desc', {str}),
+                        'description': ('desc', {str}),
+                        'timestamp': ('create_time', {int_or_none}),
+                    }),
+                    **traverse_obj(stats_info, {
+                        'view_count': 'play_count',
+                        'like_count': 'digg_count',
+                        'repost_count': 'share_count',
+                        'comment_count': 'comment_count',
+                    }, expected_type=int_or_none),
+                    **traverse_obj(author_info, {
+                        'uploader': 'unique_id',
+                        'uploader_id': 'uid',
+                        'creator': 'nickname',
+                        'channel_id': 'sec_uid',
+                    }, expected_type=str_or_none),
+                    'uploader_url': user_url,
+                    'track': music_track,
+                    'album': str_or_none(music_info.get('album')) or None,
+                    'artist': music_author or None,
+                    'formats': formats,
+                    'subtitles': self.extract_subtitles(aweme_detail, aweme_id),
+                    'thumbnails': thumbnails,
+                    'duration': int_or_none(traverse_obj(video_info, 'duration', ('download_addr', 'duration')), scale=1000),
+                    'availability': self._availability(
+                        is_private='Private' in labels,
+                        needs_subscription='Friends only' in labels,
+                        is_unlisted='Followers only' in labels),
+                    '_format_sort_fields': ('quality', 'codec', 'size', 'br'),
+                }
+        if not aweme_detail:
+            raise ExtractorError('Unable to find video in feed', video_id=aweme_id)
                 except ExtractorError as e:
                     self.report_warning(
                         f'{e.orig_msg}. Failed to extract from feed; falling back to web API response')
