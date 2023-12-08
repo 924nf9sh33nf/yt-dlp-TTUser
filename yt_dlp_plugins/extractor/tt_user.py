@@ -64,7 +64,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
         }
 
     def _entries(self, sec_uid, user_name):
-        print("entering entries"
+        print("entering entries")
         cursor = int(time.time() * 1E3)
         for page in itertools.count(1):
             response = self._download_json(
