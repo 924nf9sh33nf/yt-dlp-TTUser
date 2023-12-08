@@ -75,6 +75,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
             for video in traverse_obj(response, ('itemList', lambda _, v: v['id'])):
                 video_id = video['id']
 
+                print(video_id)
                 entry = {}
                 try:
                     entry = self._extract_aweme_app(video_id)
