@@ -159,23 +159,8 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                         is_unlisted='Followers only' in labels),
                     '_format_sort_fields': ('quality', 'codec', 'size', 'br'),
                 }
-        if not aweme_detail:
-            raise ExtractorError('Unable to find video in feed', video_id=aweme_id)
-                except ExtractorError as e:
-                    self.report_warning(
-                        f'{e.orig_msg}. Failed to extract from feed; falling back to web API response')
-                    if traverse_obj(video, ('video', 'playAddr')):
-                        entry = self._parse_aweme_video_web(video, self._create_url(user_name, video_id), video_id)
-                if entry:
-                    yield {
-                        **entry,
-                        'extractor_key': TikTokIE.ie_key(),
-                        'extractor': 'TikTok',
-                        'webpage_url': self._create_url(user_name, video_id),
-                    }
-                else:
-                    self.report_warning(f'Unable to extract video {video_id}')
-                
+                if not aweme_detail:
+                    raise ExtractorError('Unable to find video in feed', video_id=aweme_id)
 
             old_cursor = cursor
             print("traversing")
