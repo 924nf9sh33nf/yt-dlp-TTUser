@@ -77,10 +77,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                 print(video_id)
                 print("entry")          
                 yield {
-                    video_id,
-                    'extractor_key': TikTokIE.ie_key(),
-                    'extractor': 'TikTok',
-                    'webpage_url': self._create_url(user_name, video_id),
+                    video_id
                 }
 
             old_cursor = cursor
