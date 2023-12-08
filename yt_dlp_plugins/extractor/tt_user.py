@@ -86,7 +86,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'track': "",
                     'album': "",
                     'artist': "",
-                    'formats': ["formats"],
+                    'formats': [{}],
                     'subtitles': "",
                     'thumbnails': "",
                     'duration': 10,
