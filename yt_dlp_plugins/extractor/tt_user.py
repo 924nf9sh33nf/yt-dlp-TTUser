@@ -151,7 +151,7 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'Try using  --extractor-arg "tiktok:sec_uid=ID"  with your command, '
                     'replacing "ID" with the channel_id of the requested user')
         self._entries(sec_uid, user_name)
-        #print("exiting extract")
+        print("exiting extract")
         return None
 
 
