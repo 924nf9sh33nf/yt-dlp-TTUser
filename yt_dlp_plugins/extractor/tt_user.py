@@ -154,9 +154,9 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
 
         entries = self._entries(sec_uid, user_name)
         print("playlist")
-        self.playlist_result(entries, user_name)
+        result = self.playlist_result(entries, user_name)
         print("exiting extract") 
-        return  self._entries(sec_uid, user_name)
+        return result
 
 
 __all__ = []
