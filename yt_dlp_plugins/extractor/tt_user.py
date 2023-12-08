@@ -87,13 +87,10 @@ class TikTokUser_TTUserIE(TikTokUserIE, plugin_name='TTUser'):
                     'album': "",
                     'artist': "",
                     'formats': ["formats"],
-                    'subtitles': self.extract_subtitles(aweme_detail, aweme_id),
-                    'thumbnails': thumbnails,
-                    'duration': int_or_none(traverse_obj(video_info, 'duration', ('download_addr', 'duration')), scale=1000),
-                    'availability': self._availability(
-                        is_private='Private' in labels,
-                        needs_subscription='Friends only' in labels,
-                        is_unlisted='Followers only' in labels),
+                    'subtitles': "",
+                    'thumbnails': "",
+                    'duration': "",
+                    'availability': "",
                     '_format_sort_fields': ('quality', 'codec', 'size', 'br'),
                 }
 
